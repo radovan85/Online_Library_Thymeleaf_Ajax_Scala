@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+<div class="container">
+	<div class="container" 
+	style="width: 829px;font-family: Rajdhani, sans-serif; color: rgb(32,1,47);margin-top: 150px;margin-bottom: 100px;">
+		<h2>Book Details</h2>
+		<table class="table table-bordered"  style="margin-top: 100px;color: rgb(32,1,47);">
+			<tbody>
+				<tr>
+					<td>Book Image</td>
+					<td>
+						<img th:src="@{${currentBook.getMainImagePath()}}"
+						width="30%" height="150px" alt="${currentBook.name}" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Book Id</td>
+					<td th:text="${currentBook.bookId}"></td>
+				</tr>
+				
+				<tr>
+					<td>ISBN</td>
+					<td th:text="${currentBook.ISBN}"></td>
+				</tr>
+				
+				<tr>
+					<td>Publisher</td>
+					<td th:text="${currentBook.publisher}"></td>
+				</tr>
+				
+				<tr>
+					<td>Author</td>
+					<td th:text="${currentBook.author}"></td>
+				</tr>
+				
+				<tr>
+					<td>Description</td>
+					<td th:text="${currentBook.description}"></td>
+				</tr>
+				
+				<tr>
+					<td>Language</td>
+					<td th:text="${currentBook.language}"></td>
+				</tr>
+				
+				<tr>
+					<td>Year Published</td>
+					<td th:text="${currentBook.publishedYear}"></td>
+				</tr>
+				
+				<tr>
+					<td>Page Number</td>
+					<td th:text="${currentBook.pageNumber}"></td>
+				</tr>
+				
+				<tr>
+					<td>Price</td>
+					<td> 
+						<span>&euro;</span>
+						<span th:text="${currentBook.price} % 1 == 0 ? ${currentBook.price}  
+						:${#numbers.formatDecimal(currentBook.price, 0, 2)} "></span>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Rating</td>
+					<td> 
+						<th:block th:if="${currentBook.averageRating != null}">
+							<span th:text="${currentBook.averageRating}"></span>
+						</th:block>
+						
+						<th:block th:if="${currentBook.averageRating == null}">
+							<span th:text="${'No ratings'}"></span>
+						</th:block>
+					</td>
+				</tr>
+				
+				<tr>
+					<td>Cover</td>
+					<td th:text="${currentBook.cover}"></td>
+				</tr>
+				
+				<tr>
+					<td>Letter</td>
+					<td th:text="${currentBook.letter}"></td>
+				</tr>
+				
+				<tr>
+					<td>Genre</td>
+					<td>
+						<th:block th:each="tempGenre : ${allGenres}">
+							<th:block th:if="${tempGenre.genreId == currentBook.genreId}">
+								<span th:text="${tempGenre.name}"></span>
+							</th:block>
+						</th:block>
+					</td>
+				</tr>
+				
+				<th:block sec:authorize="!hasAuthority('ADMIN')">
+					<tr>
+						<td>Actions</td>
+						<td>
+							<th:block sec:authorize="hasAuthority('ROLE_USER')">
+								<button class="btn btn-primary" th:onclick="addToWishlist([[${currentBook.bookId}]])" 
+								style="float: right">Add To Wish list</button>
+							</th:block>
+							<button class="btn btn-primary" th:onclick="addToCart([[${currentBook.bookId}]])"
+							style="float: right;margin-right: 10px;">Add To Cart</button>
+							<button class="btn btn-primary" th:onclick="addReview([[${currentBook.bookId}]])"
+							style="float: right;margin-right: 10px;">Add Review</button>
+						</td>
+					</tr>
+				
+					
+				</th:block>
+			</tbody>
+		</table>
+		
+		<th:block sec:authorize="isAuthenticated()" th:if="${allReviews.size() > 0}">
+			<div style="margin-top: 75px;">
+				<table class="table table-bordered table-info" id=reviewsTable>
+					<thead class="table-secondary">
+						<tr>
+							<th th:text="${'Author'}"></th>
+							<th th:text="${'Text'}"></th>
+							<th th:text="${'Rating'}"></th>
+							<th th:text="${'Date'}"></th>
+						</tr>
+					</thead>
+					
+					<tbody>
+						<tr th:each="tempReview : ${allReviews}">
+							<th:block th:each="tempAuthor : ${allCustomers}">
+								<th:block th:each="tempUser : ${allUsers}">
+									<th:block th:if="${tempReview.authorId == tempAuthor.customerId}">
+										<th:block th:if="${tempAuthor.userId == tempUser.id}">
+											<td th:text="${tempUser.firstName + ' ' + tempUser.lastName}"></td>
+											<td th:text="${tempReview.text}"></td>
+											<td th:text="${tempReview.rating}"></td>
+											<td th:text="${tempReview.date}"></td>
+										</th:block>
+									</th:block>
+								</th:block>
+							</th:block>
+						</tr>
+					</tbody>
+				</table>
+				
+				<div style="float: right">
+           			<button th:onclick="prevPage()" id="btn_prev">Prev</button>
+					page: <span id="page"></span>
+					<button th:onclick="nextPage()" id="btn_next">Next</button>
+				</div>
+			</div>
+			
+		<script>
+	
+			var current_page = 1;
+			var records_per_page = 8;
+			var l = document.getElementById("reviewsTable").rows.length;
+	
+
+
+			function prevPage() {
+	  			if (current_page > 1) {
+	    			current_page--;
+	   				 changePage(current_page);
+	  			}
+			}
+
+			function nextPage() {
+	  			if (current_page < numPages()) {
+	    			current_page++;
+	    			changePage(current_page);
+	  			}
+			}
+
+			function changePage(page) {
+	  			var btn_next = document.getElementById("btn_next");
+	  			var btn_prev = document.getElementById("btn_prev");
+	  			var listing_table = document.getElementById("reviewsTable");
+	  			var page_span = document.getElementById("page");
+	  
+	  
+
+	  			// Validate page
+	  			if (page < 1) page = 1;
+	  			if (page > numPages()) page = numPages();
+	  			console.log(listing_table.rows);
+	  			for (var i = 0; i < l; i++) {
+	    			listing_table.rows[i].style.display = "none"; 
+	  			}
+
+
+	  			listing_table.rows[0].style.display = "table-row"; // displaying table header
+	  
+	  			for (var x = (page - 1) * records_per_page; x < (page * records_per_page); x++) {
+		  	
+		  			if(x === l - 1){
+		  				break;
+		  			}
+		  			listing_table.rows[x + 1].style.display = "table-row";	    
+	  			};
+	  
+	  
+
+	  			page_span.innerHTML = page + "/" + numPages();
+
+	  			if (page == 1) {
+	   				 btn_prev.style.visibility = "hidden";
+	  			} else {
+	    			btn_prev.style.visibility = "visible";
+	  			}
+
+	  			if (page == numPages()) {
+	    			btn_next.style.visibility = "hidden";
+	  			} else {
+	    			btn_next.style.visibility = "visible";
+	  			}
+			}
+
+			function numPages() {
+				var returnValue;
+				var arraySize = l - 1;
+				console.log("Array size = " + arraySize);
+		
+				if((arraySize % records_per_page) === 0){
+					returnValue = arraySize / records_per_page;
+				}else{
+					returnValue = Math.ceil(arraySize / records_per_page);
+				}
+		
+				return returnValue;
+			}
+
+			$(document).ready(function() {
+	 			 changePage(1);
+			});
+		</script>
+		</th:block>
+		
+		<div align="center" style="margin-top: 50px;">
+			<button class="btn btn-info" th:onclick="redirectAllBooks()">All Books</button>
+		</div>
+	</div>
+</div>
+</th:block>

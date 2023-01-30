@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+<div class="container-wrapper">
+    <div class="container" style="font-family: Rajdhani, sans-serif; color: rgb(32,1,47);">
+
+        <div class="page-header">
+            <h1>About Us</h1>
+            <p>We are a humble team who are passionate about helping our customers to get the best experience on books and stuff.
+            We are determined to provide the best products and services.</p>
+        </div>
+        
+        <div align="center" style="margin-top: 50px;">
+        	<button class="btn btn-secondary" th:onclick="redirectHome()">Home Page</button>
+        </div>
+        
+	</div>
+</div>
+</th:block>

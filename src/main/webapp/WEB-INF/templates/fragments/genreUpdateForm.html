@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container" style="font-family: Rajdhani, sans-serif; color: rgb(32,1,47);">
+		<form method="POST" id="genreUpdateForm"  th:object="${genre}"  style="margin-bottom: 75px">
+			<h2 align="center" style="margin-bottom: 50px;margin-top:120px;" th:text="${'Genre Update Form'}"></h2>
+			
+			<input type="hidden" name="genreId" th:value="${currentGenre.genreId}">
+			
+			<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Genre Name:</label>
+				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter Genre Name'}" 
+				style="height: 35px;width: 500px;" id="name" name="name" th:value="${currentGenre.name}">
+            	<span  class="text-danger" id="nameError" th:text="${'Please provide genre name!'}" style="visibility: hidden"></span>
+            </div>
+            
+            <div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Description:</label>
+				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter Short Description'}" 
+				style="height: 35px;width: 500px;" id="description" name="description" th:value="${currentGenre.description}">
+            	<span  class="text-danger" id="descriptionError" th:text="${'Please provide description!'}" style="visibility: hidden"></span>
+            </div>
+            
+            <div align="center">
+            	<button type="submit" class="btn btn-info">Submit</button>
+            </div>
+		</form>
+	</div>
+
+<script>
+
+genreInterceptor("genreUpdateForm");
+
+function genreInterceptor(formName) {
+    var $form = $("#" + formName);
+
+    $form.on('submit', function(e) {
+        e.preventDefault();
+        if(validateGenre()){
+        	$.ajax({
+            	url : "http://localhost:8080/admin/createGenre",
+            	type : 'post',
+            	data : $form.serialize(),
+            	success : function(response) {
+       	     		$("#ajaxLoadedContent").load("/admin/allGenres");
+       	 		},
+       	 		error: function(error) {
+       		  		alert("Failed");
+       		 	}
+        	});
+        };
+    });
+};
+</script>
+
+</th:block>

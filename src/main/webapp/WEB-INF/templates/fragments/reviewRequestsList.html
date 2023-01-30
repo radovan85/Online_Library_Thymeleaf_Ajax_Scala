@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+<div class="container" style="margin-top: 120px;font-family: Rajdhani, sans-serif;">
+		<button class="btn btn-info" th:onclick="redirectAllReviews()">Active Reviews</button>
+</div>
+
+<th:block th:if="${pendingReviews.size == 0}">
+		<div class="container">
+			<div style="margin-top: 70px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;color: rgb(32,1,47);"align="center">
+				<h1 th:text="${'No pending reviews currently'}"></h1>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block th:if="${pendingReviews.size > 0}">
+		<div class="container"
+			style="margin-top: 70px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;color: rgb(32,1,47);" align="center">
+			<h1 th:text="${'Pending Reviews'}"></h1><br><br>
+			
+			<table class="table table-bordered table-stripped table-hover" id="pendingReviewsTable">
+				<thead class="table-warning">
+					<tr>
+						<th th:text="${'Rating'}"></th>
+						<th th:text="${'Book'}"></th>
+						<th th:text="${'Author'}"></th>
+						<th th:text="${'Actions'}"></th>
+					</tr>
+				</thead>
+				
+				<tbody class="table-primary">
+					<tr th:each="tempReview : ${pendingReviews}">
+						<td th:text="${tempReview.rating}"></td>
+						<td>
+							<th:block th:each="tempBook : ${allBooks}">
+								<th:block th:if="${tempBook.bookId == tempReview.bookId}">
+									<span th:text="${tempBook.name}"></span>
+								</th:block>
+							</th:block>
+						</td>
+						
+						<td>
+							<th:block th:each="tempUser : ${allUsers}">
+								<th:block th:each="tempCustomer : ${allCustomers}">
+									<th:block th:if="${tempUser.id == tempCustomer.userId}">
+										<th:block th:if="${tempCustomer.customerId == tempReview.authorId}">
+											<span th:text="${tempUser.firstName + ' ' + tempUser.lastName}"></span>
+										</th:block>
+									</th:block>
+								</th:block>
+							</th:block>
+						</td>
+						
+						<td>
+							<button class="btn btn-secondary" 
+								th:onclick="redirectPendingReview([[${tempReview.reviewId}]])">Details
+							</button>
+						</td>
+					</tr>
+					
+				</tbody>
+			</table>
+		</div>
+	</th:block>
+	
+	<div class="container" align="center" 
+		style="font-family: Rajdhani, sans-serif;margin-bottom: 100px;margin-top: 60px;">
+			<button class="btn btn-secondary" th:onclick="redirectHome()">Home Page</button>
+	</div>
+
+
+</th:block>

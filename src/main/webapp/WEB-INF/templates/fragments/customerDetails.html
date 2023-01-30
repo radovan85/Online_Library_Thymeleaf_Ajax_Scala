@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container" style="margin-top: 125px;margin-bottom: 100px;font-family: Rajdhani,sans-serif;color: rgb(32,1,47);">
+		<div align="center">
+			<h2 th:text="${'Delivery address of ' + tempUser.firstName + ' ' + tempUser.lastName}"></h2>
+			<br><br>
+			<table class="table table-bordered table-success">
+				
+				<thead>
+					<tr>
+						<th th:text="${'Address'}"></th>
+						<th th:text="${'City'}"></th>
+						<th th:text="${'State'}"></th>
+						<th th:text="${'Zip Code'}"></th>
+						<th th:text="${'Country'}"></th>
+					</tr>
+				</thead>
+					
+				<tbody class="table-info">
+					<tr>
+						<td th:text="${address.address}"></td>
+						<td th:text="${address.city}"></td>
+						<td th:text="${address.state}"></td>
+						<td th:text="${address.zipcode}"></td>
+						<td th:text="${address.country}"></td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<div style="margin-top: 50px;">
+				<th:block th:if="${persistence != null}">
+					<h3 th:text="${'Last login: ' + persistence.date}"></h3>
+				</th:block>
+				<h3> 
+					<span th:text="${'Orders value: '}"></span>
+					<span>&euro;</span>
+					<span th:text="${ordersValue} % 1 == 0 ? ${ordersValue} :${#numbers.formatDecimal(ordersValue, 0, 2)}"></span>
+				</h3>
+			</div>
+			
+			<div align="center" style="margin-top: 50px;">
+				<button class="btn btn-secondary" th:onclick="redirectAllCustomers()">All Customers</button>
+				<button class="btn btn-primary" style="margin-left: 15px;"
+				 th:onclick="redirectAllCustomerOrders([[${tempCustomer.customerId}]])">Customer Orders</button>
+			</div>
+		</div>
+	</div>
+
+</th:block>

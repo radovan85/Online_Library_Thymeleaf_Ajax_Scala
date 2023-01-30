@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<th:block th:if="${allCustomers.size == 0}">
+		<div class="container">
+			<div style="margin-top: 120px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;color: rgb(32,1,47);"align="center">
+				<h1 th:text="${'No available orders currently'}"></h1>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block th:if="${allCustomers.size > 0}">
+		<div class="container"
+			style="margin-top: 120px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;color: rgb(32,1,47);" align="center">
+			<h1 th:text="${'Customers List'}"></h1><br><br>
+		
+		
+			<table class="table table-stripped table-hover table-bordered table-success" id="customersTable">
+				<thead class="table-dark">
+					<tr>
+						<th th:text="${'Customer Id'}"></th>
+            			<th th:text="${'First Name'}"></th>
+                		<th th:text="${'Last Name'}"></th>
+                		<th th:text="${'Email'}"></th>
+                		<th th:text="${'Enabled'}"></th>
+                		<th><span th:text="${'Actions'}"></span></th>
+					</tr>
+				</thead>
+			
+				<tbody>
+					<tr th:each="tempCustomer : ${allCustomers}">
+						<th:block th:each="tempUser : ${allUsers}">
+							<th:block th:if="${tempCustomer.userId == tempUser.id}">
+								<td th:text="${tempCustomer.customerId}"></td>
+								<td th:text="${tempUser.firstName}"></td>
+								<td th:text="${tempUser.lastName}"></td>
+								<td th:text="${tempUser.email}"></td>
+								<td>
+									<th:block th:if="${tempUser.enabled == 0}">
+										<span class="text-danger" th:text="Suspended"></span>
+									</th:block>
+								
+									<th:block th:if="${tempUser.enabled == 1}">
+										<span th:text="Enabled"></span>
+									</th:block>
+								</td>
+							
+								<td>
+									<div>
+                    					<button class="btn btn-primary" th:onclick="redirectCustomerDetails([[${tempCustomer.customerId}]])" >Details</button>
+                    						<th:block th:if="${tempUser.enabled == 0}">
+                    							<button class="btn btn-dark" th:onclick="reactivateUser([[${tempUser.id}]])">Reactivate</button>
+                    						</th:block>
+                    						
+                    						<th:block th:if="${tempUser.enabled == 1}">
+                    							<button class="btn btn-danger" th:onclick="suspendUser([[${tempUser.id}]])">Suspend</button>
+                    						</th:block>
+                    				</div>
+                    			</td>
+							</th:block>
+						</th:block>
+					</tr>
+				</tbody>
+			</table>
+		
+			<div style="float: right">
+           		<button th:onclick="prevPage()" id="btn_prev">Prev</button>
+				page: <span id="page"></span>
+				<button th:onclick="nextPage()" id="btn_next">Next</button>
+			</div>
+		
+			
+			
+		</div>
+			<script>
+	
+				var current_page = 1;
+				var records_per_page = 8;
+				var l = document.getElementById("customersTable").rows.length;
+	
+
+
+				function prevPage() {
+	  				if (current_page > 1) {
+	    				current_page--;
+	   				 	changePage(current_page);
+	  				}
+				}
+
+				function nextPage() {
+	  				if (current_page < numPages()) {
+	    				current_page++;
+	    				changePage(current_page);
+	  				}
+				}
+
+				function changePage(page) {
+	  				var btn_next = document.getElementById("btn_next");
+	  				var btn_prev = document.getElementById("btn_prev");
+	  				var listing_table = document.getElementById("customersTable");
+	  				var page_span = document.getElementById("page");
+	  
+	  
+
+	  				// Validate page
+	  				if (page < 1) page = 1;
+	  				if (page > numPages()) page = numPages();
+	  				console.log(listing_table.rows);
+	  				for (var i = 0; i < l; i++) {
+	    				listing_table.rows[i].style.display = "none"; 
+	  				}
+
+
+	  				listing_table.rows[0].style.display = "table-row"; // displaying table header
+	  
+	  				for (var x = (page - 1) * records_per_page; x < (page * records_per_page); x++) {
+		  	
+		  				if(x === l - 1){
+		  					break;
+		  				}
+		  				listing_table.rows[x + 1].style.display = "table-row";	    
+	  				};
+	  
+	  
+
+	  				page_span.innerHTML = page + "/" + numPages();
+
+	  				if (page == 1) {
+	   					btn_prev.style.visibility = "hidden";
+	  				} else {
+	    				btn_prev.style.visibility = "visible";
+	  				}
+
+	  				if (page == numPages()) {
+	    				btn_next.style.visibility = "hidden";
+	  				} else {
+	    				btn_next.style.visibility = "visible";
+	  				}
+				}
+
+				function numPages() {
+					var returnValue;
+					var arraySize = l - 1;
+					console.log("Array size = " + arraySize);
+		
+					if((arraySize % records_per_page) === 0){
+						returnValue = arraySize / records_per_page;
+					}else{
+						returnValue = Math.ceil(arraySize / records_per_page);
+					}
+		
+					return returnValue;
+				}
+
+				$(document).ready(function() {
+	 			 	changePage(1);
+				});
+		</script>
+	</th:block>
+	
+	<div style="margin-top: 60px;margin-bottom: 100px;font-family: Rajdhani, sans-serif" align="center">
+            	<button class="btn btn-secondary" th:onclick="redirectHome()">Home Page</button>
+     </div>
+
+</th:block>

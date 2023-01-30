@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+
+	<th:block th:fragment="ajaxLoadedContent">
+		<div class="container" style="font-family: Rajdhani, sans-serif; color: rgb(32,1,47);">
+			<form method="POST" id="reviewForm"  th:object="${review}"  style="margin-bottom: 75px">
+		
+				<div align="center" style="margin-bottom: 50px;margin-top:120px;">
+					<h2 th:text="${book.name}"></h2>
+					<h2 th:text="${'Review Form'}"></h2>
+				</div>
+				
+				<input type="hidden" name="bookId" th:value="${book.bookId}">
+		
+				<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+					<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Text:</label>
+					<textarea class="border-secondary form-control"  th:placeholder="${'Enter Review Text'}" 
+					style="height: 35px;width: 500px;height: 100px;" id="text" th:field="*{text}" ></textarea>
+            		<span  class="text-danger" id="textError" th:text="${'Please provide text!'}" style="visibility: hidden"></span>
+         		</div>
+         	
+         		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+            		<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Rating:</label>
+            		<select class="form-control" id="rating"  style="width: 175px;height: 30px;padding-top: 0px;text-indent: 10px;" th:field="*{rating}" >
+           					 	<option value="" >Please Select</option>
+            					<option th:each="ratingValue : ${ratings}" th:value="${ratingValue}" th:text="${ratingValue}" >
+    							</option>
+        			</select>
+            		<span  class="text-danger" id="ratingError" th:text="${'Please rate the book!'}" style="visibility: hidden"></span>
+           		</div>
+            
+            	<div align="center" style="margin-top: 25px;">
+    				<button type="submit" class="btn btn-info">Submit</button>
+    			</div>
+			</form>
+		</div>
+		
+		<script>
+		reviewInterceptor("reviewForm");
+
+		function reviewInterceptor(formName) {
+		    var $form = $("#" + formName);
+
+		    $form.on('submit', function(e) {
+		        e.preventDefault();
+		        if(validateReview()){
+		        	$.ajax({
+		            	url : "http://localhost:8080/reviews/createReview",
+		            	type : 'post',
+		            	data : $form.serialize(),
+		            	success : function(response) {
+		       	     		$("#ajaxLoadedContent").load("/reviews/reviewSentCompleted");
+		       	 		},
+		       	 		error: function(error) {
+		       		  		alert("You have rated this book already");
+		       		 	}
+		        	});
+		        };
+		    });
+		};	
+		</script>
+	</th:block>

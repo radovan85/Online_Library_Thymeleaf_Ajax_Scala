@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container" style="font-family: Rajdhani, sans-serif">
+		<div class="jumbotron jumbotron-primary" align="center" style="background-color:  #c20e14;color: #d9d9d9;">
+			<h2 th:text="${'All Books in your cart'}"></h2>
+		</div>
+		
+		<div style="margin-top: 50px;">
+			<button class="btn btn-danger" 
+				style="margin-right: 20px;" 
+				th:onclick="eraseAllItems([[${cart.cartId}]])">Clear Cart
+			</button>
+			<button class="btn btn-info" 
+				th:onclick="redirectOrderConfirmation([[${cart.cartId}]])">Checkout
+			</button>
+		</div>
+		
+		<div style="margin-top: 50px;">
+		<table class="table table-bordered table-secondary table-hover table-stripped">
+			<thead class="table-primary">
+				<tr>
+					<th th:text="${'Item Id'}"></th>
+					<th th:text="${'Book'}"></th>
+					<th th:text="${'Unit Price'}"></th>
+					<th th:text="${'Quantity'}"></th>
+					<th th:text="${'Discount'}"></th>
+					<th th:text="${'Cart Price'}"></th>
+					<th th:text="${'Actions'}"></th>
+				</tr>
+			</thead>
+			
+			<tbody>
+				<tr th:each="cartItem : ${allCartItems}">
+					<th:block th:each="tempBook : ${allBooks}">
+						<th:block th:if="${cartItem.bookId == tempBook.bookId}">
+							<td th:text="${cartItem.cartItemId}"></td>
+							<td th:text="${tempBook.name}"></td>
+							<td> 
+								<span>&euro;</span>
+								<span th:text="${tempBook.price} % 1 == 0 ? ${tempBook.price} :${#numbers.formatDecimal(tempBook.price, 0, 2)}"></span>
+							</td>
+							<td th:text="${cartItem.quantity}">
+							<td th:text="${discount + ' %'}"></td>
+							<td> 
+								<span>&euro;</span>
+								<span th:text="${cartItem.price} % 1 == 0 ? ${cartItem.price} :${#numbers.formatDecimal(cartItem.price, 0, 2)}"></span>
+							</td>
+							<td>
+								<button class="btn btn-danger" th:onclick="eraseItem([[${cart.cartId}]],[[${cartItem.cartItemId}]])">Remove</button>
+							</td>
+						</th:block>
+					</th:block>
+				</tr>
+				<tr>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+					<th></th>
+				</tr>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td colspan="2">
+						<span th:text="${'Final Price: '}"></span>
+						<span>&euro;</span>
+						<span th:text="${cart.cartPrice} % 1 == 0 ? ${cart.cartPrice} :${#numbers.formatDecimal(cart.cartPrice, 0, 2)}"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</div>
+		<div align="center" style="margin-top: 50px;margin-bottom: 100px;">
+			<button class="btn btn-secondary" th:onclick="redirectAllBooks()">Continue Shopping</button>
+		</div>
+	</div>
+
+</th:block>

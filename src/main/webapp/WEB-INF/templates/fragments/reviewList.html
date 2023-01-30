@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container" style="margin-top: 120px;font-family: Rajdhani, sans-serif;">
+		<button class="btn btn-info" th:onclick="redirectAllRequestedReviews()">Pending Reviews</button>
+	</div>
+	
+	
+	<th:block th:if="${approvedReviews.size == 0}">
+		<div class="container">
+			<div style="margin-top: 70px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;color: rgb(32,1,47);"align="center">
+				<h1 th:text="${'No reviews currently'}"></h1>
+			</div>
+		</div>
+	</th:block>
+	
+	<th:block th:if="${approvedReviews.size > 0}">
+		<div class="container">
+			<div style="margin-top: 70px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;color: rgb(32,1,47);"align="center">
+				<h1 th:text="${'Active Reviews'}"></h1><br><br>
+			
+			
+				<table class="table table-bordered table-stripped table-hover" id="activeReviewsTable">
+					<thead class="table-dark">
+						<tr>
+							<th th:text="${'Rating'}"></th>
+							<th th:text="${'Book'}"></th>
+							<th th:text="${'Author'}"></th>
+							<th th:text="${'Actions'}"></th>
+						</tr>
+					</thead>
+				
+					<tbody class="table-primary">
+						<tr th:each="tempReview : ${approvedReviews}">
+							<td th:text="${tempReview.rating}"></td>
+							<td>
+								<th:block th:each="tempBook : ${allBooks}">
+									<th:block th:if="${tempBook.bookId == tempReview.bookId}">
+										<span th:text="${tempBook.name}"></span>
+									</th:block>
+								</th:block>
+							</td>
+						
+							<td>
+								<th:block th:each="tempUser : ${allUsers}">
+									<th:block th:each="tempCustomer : ${allCustomers}">
+										<th:block th:if="${tempUser.id == tempCustomer.userId}">
+											<th:block th:if="${tempCustomer.customerId == tempReview.authorId}">
+												<span th:text="${tempUser.firstName + ' ' + tempUser.lastName}"></span>
+											</th:block>
+										</th:block>
+									</th:block>
+								</th:block>
+							</td>
+						
+							<td>
+								<button class="btn btn-secondary" th:onclick="redirectReviewDetails([[${tempReview.reviewId}]])">Details</button>
+							</td>
+						</tr>
+					
+					</tbody>
+				</table>
+				
+				<div style="float: right;">
+           			<button th:onclick="prevPage()" id="btn_prev">Prev</button>
+						page: <span id="page"></span>
+					<button th:onclick="nextPage()" id="btn_next">Next</button>
+				</div>
+			</div>
+		</div>
+		
+		<script>
+	
+			var current_page = 1;
+			var records_per_page = 5;
+			var l = document.getElementById("activeReviewsTable").rows.length;
+	
+
+
+			function prevPage() {
+	  			if (current_page > 1) {
+	    			current_page--;
+	   				 changePage(current_page);
+	  			}
+			}
+
+			function nextPage() {
+	  			if (current_page < numPages()) {
+	    			current_page++;
+	    			changePage(current_page);
+	  			}
+			}
+
+			function changePage(page) {
+	  			var btn_next = document.getElementById("btn_next");
+	  			var btn_prev = document.getElementById("btn_prev");
+	  			var listing_table = document.getElementById("activeReviewsTable");
+	  			var page_span = document.getElementById("page");
+	  
+	  
+
+	  			// Validate page
+	  			if (page < 1) page = 1;
+	  			if (page > numPages()) page = numPages();
+	  			console.log(listing_table.rows);
+	  			for (var i = 0; i < l; i++) {
+	    			listing_table.rows[i].style.display = "none"; 
+	  			}
+
+
+	  			listing_table.rows[0].style.display = "table-row"; // displaying table header
+	  
+	  			for (var x = (page - 1) * records_per_page; x < (page * records_per_page); x++) {
+		  	
+		  			if(x === l - 1){
+		  				break;
+		  			}
+		  			listing_table.rows[x + 1].style.display = "table-row";	    
+	  			};
+	  
+	  
+
+	  			page_span.innerHTML = page + "/" + numPages();
+
+	  			if (page == 1) {
+	   				 btn_prev.style.visibility = "hidden";
+	  			} else {
+	    			btn_prev.style.visibility = "visible";
+	  			}
+
+	  			if (page == numPages()) {
+	    			btn_next.style.visibility = "hidden";
+	  			} else {
+	    			btn_next.style.visibility = "visible";
+	  			}
+			}
+
+			function numPages() {
+				var returnValue;
+				var arraySize = l - 1;
+				console.log("Array size = " + arraySize);
+		
+				if((arraySize % records_per_page) === 0){
+					returnValue = arraySize / records_per_page;
+				}else{
+					returnValue = Math.ceil(arraySize / records_per_page);
+				}
+		
+				return returnValue;
+			}
+
+			$(document).ready(function() {
+	 			 changePage(1);
+			});
+	</script>
+		
+	</th:block>
+	<div align="center" style="margin-top: 40px;margin-bottom: 100px;font-family: Rajdhani, sans-serif;">
+		<button class="btn btn-secondary" th:onclick="redirectHome()">Home Page</button>
+	</div>	
+		
+
+</th:block>

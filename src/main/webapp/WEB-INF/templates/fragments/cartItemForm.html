@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+<div class="container">
+	<div class="container" style="width: 829px;font-family: Rajdhani, sans-serif; color: rgb(32,1,47);margin-top: 150px;">
+		<h2 th:text="${'Book Details'}"></h2>
+		<table class="table table-bordered"  style="margin-top: 100px;color: rgb(32,1,47);">
+			<tbody>
+				<tr>
+					<td th:text="${'Book Image'}"></td>
+					<td>
+						<img th:src="@{${selectedBook.getMainImagePath()}}"
+						width="30%" height="150px" alt="${selectedBook.name}" />
+					</td>
+				</tr>
+				
+				<tr>
+					<td th:text="${'Book Name'}"></td>
+					<td th:text="${selectedBook.name}">
+				</tr>
+				
+				<tr>
+					<td th:text="${'Book Price'}"></td>
+					<td> 
+						<span>&euro;</span>
+						<span th:text="${selectedBook.price} % 1 == 0 ? ${selectedBook.price} :${#numbers.formatDecimal(selectedBook.price, 0, 2)}"></span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	
+	<div align="center" style="margin-bottom: 100px;margin-top: 60px;font-family: Rajdhani, sans-serif;">
+		<form id="itemForm" th:object="${cartItem}" method="POST" >
+			<input type="hidden" name="bookId" th:value="${selectedBook.bookId}" />
+			<div align="center">
+			<input type="text" id="quantity" name="quantity" th:placeholder="${'Enter Quantity'}" 
+				th:onkeypress="return validateNumber(event)" />
+			</div>
+			<span id="quantityError" th:text="${'Minimum 1 and Maximum 50 books'}" 
+				class="text-danger" style="visibility: hidden">
+			</span>
+			<div style="margin-top: 25px;">
+				<button class="btn btn-primary" type="submit">Add To Cart</button>
+			</div>
+		</form>
+		<script>itemInterceptor("itemForm");</script>
+	</div>
+</div>
+</th:block>

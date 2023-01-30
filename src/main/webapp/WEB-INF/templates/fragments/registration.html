@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+
+
+	<th:block th:fragment="ajaxLoadedContent">
+	
+		<div class="container">
+		
+			<div style="font-family: Rajdhani, sans-serif; color: rgb(32,1,47);margin-bottom: 100px;">
+        		<form method="POST" id="registrationForm" name="registrationForm" th:object="${tempForm}" >
+        			<h2 align="center" style="margin-bottom: 50px;margin-top:120px;" th:text="${'Customer Info'}"></h2>
+        			<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">First Name:</label>
+        				<input class="border-secondary form-control" type="text" placeholder="Enter First Name" 
+        				style="height: 35px;width: 500px;" id="firstName" th:field="*{user.firstName}" >
+        				<span id="firstNameError" class="text-danger" style="visibility: hidden" th:text="${'Please Provide First Name'}"></span>
+        			</div>
+        			
+        			<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Last Name:</label>
+        				<input class="border-secondary form-control" type="text" placeholder="Enter Last Name" 
+        				style="height: 35px;width: 500px;" id="lastName" th:field="*{user.lastName}" >
+        				<span id="lastNameError" class="text-danger" style="visibility: hidden" th:text="${'Please Provide Last Name'}"></span>
+        			</div>
+        			
+        			<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Email:</label>
+        				<input class="border-secondary form-control" type="text" placeholder="Enter Email Address" 
+        				style="height: 35px;width: 500px;" id="email" th:field="*{user.email}">
+                		<span id="emailError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide Valid Email!'}"></span>    
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+            			<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Password:</label>
+            			<input class="border-secondary form-control" type="password" placeholder="Enter Password" 
+            			style="height: 35px;width: 500px;" id="password"  th:field="*{user.password}"> 
+                		<span id="passwordError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide Password!'}"></span>  
+            		</div>
+            	
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+            			<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Confirm Password:</label>
+            			<input class="border-secondary form-control" type="password" placeholder="Confirm Password" 
+            			style="height: 35px;width: 500px;" id="confirmpass" >
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+            			<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Date Of Birth:</label>
+            			<input class="border-secondary form-control" type="date"  
+            			style="height: 35px;width: 500px;" id="dateOfBirth" th:field="*{customer.dateOfBirthStr}" required="required">
+            			<span id="birthdayError" class="text-danger" style="visibility: hidden;" th:text="${'Must Have 18 years!'}"></span>
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Address:</label>
+        				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter Delivery Address'}" 
+        				style="height: 35px;width: 500px;" id="address" th:field="*{address.address}">
+                		<span id="addressError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide Delivery Address!'}"></span>    
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">City:</label>
+        				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter City'}" 
+        				style="height: 35px;width: 500px;" id="city" th:field="*{address.city}">
+                		<span id="cityError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide City!'}"></span>    
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">State:</label>
+        				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter State'}" 
+        				style="height: 35px;width: 500px;" id="state" th:field="*{address.state}">
+                		<span id="stateError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide State!'}"></span>    
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Zip Code:</label>
+        				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter Zip Code'}" 
+        				style="height: 35px;width: 500px;" id="zipcode" th:field="*{address.zipcode}">
+                		<span id="zipcodeError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide Zip Code!'}"></span>    
+            		</div>
+            		
+            		<div class="text-center d-flex justify-content-sm-start align-items-sm-end" style="margin-bottom: 25px;">
+        				<label class="text-right d-inline-block" style="width: 310px;margin-right: 20px;">Country:</label>
+        				<input class="border-secondary form-control" type="text" th:placeholder="${'Enter Country'}" 
+        				style="height: 35px;width: 500px;" id="country" th:field="*{address.country}">
+                		<span id="countryError" class="text-danger" style="visibility: hidden;" th:text="${'Please Provide Country!'}"></span>    
+            		</div>
+            		
+            		<div class="text-center" style="margin-top:20px;">
+               			<button class="btn btn-primary border-dark"  type="submit" id="regSubmitForm" 
+               				style="background-color: rgb(0,1,1);color: rgb(217,5,18);"  th:onclick="return ValidatePassword()" 
+               				th:onmouseout="this.style='background-color:rgb(0,1,1);color:rgb(217,5,18);'" 
+               				th:onmouseover="this.style='background-color:rgb(217,5,18);color:rgb(0,1,1);'">
+                			Register
+                		</button>
+            		</div>
+        		</form>
+        		
+        		<script>formInterceptor("registrationForm");</script>
+			</div>
+		</div>
+	</th:block>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+	
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container">
+		<div style="font-family: Rajdhani, sans-serif;color: rgb(59,1,5);">
+        	<h1 align="center" style="margin-bottom: 50px;margin-top:120px;" th:text="${'Registration Completed'}"></h1>
+        
+        
+        
+        	<div
+             	class="text-center" style="margin-top:20px;">
+             	<button class="btn btn-primary border-dark" 
+             		th:onclick="redirectLogin()"   
+             		style="background-color: rgb(0,1,1);color: rgb(217,5,18);"  
+             		th:onmouseout="this.style='background-color:rgb(0,1,1);color:rgb(217,5,18);'" 
+             		th:onmouseover="this.style='background-color:rgb(217,5,18);color:rgb(0,1,1);'">
+             		Login Page
+             	</button>
+        	</div>
+        
+       </div>
+    </div>
+        
+        
+        
+</th:block>

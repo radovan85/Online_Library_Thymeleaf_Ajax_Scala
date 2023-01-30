@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+<div class="container">
+	<div class="container" style="width: 829px;font-family: Rajdhani, sans-serif; color: rgb(32,1,47);margin-top: 150px;">
+		<h2 th:text="${'Review Details'}"></h2>
+		<table class="table table-bordered"  style="margin-top: 100px; margin-bottom: 120px;color: rgb(32,1,47);">
+			<tbody>
+				<tr>
+					<td th:text="${'Book Id'}"></td>
+					<td th:text="${currentBook.bookId}"></td>
+				</tr>
+				
+				<tr>
+					<td th:text="${'Book Name'}"></td>
+					<td th:text="${currentBook.name}"></td>
+				</tr>
+				
+				<tr>
+					<td th:text="${'Rating'}"></td>
+					<td th:text="${currentReview.rating}"></td>
+				</tr>
+				
+				<tr>
+					<td th:text="${'Author'}"></td>
+					<td th:text="${tempUser.firstName + ' ' + tempUser.lastName}"></td>
+				</tr>
+				
+				<tr>
+					<td th:text="${'Text'}"></td>
+					<td th:text="${currentReview.text}"></td>
+				</tr>
+				
+				<tr>
+					<td th:text="${'Posted'}"></td>
+					<td th:text="${currentReview.date}"></td>
+				</tr>
+			</tbody>
+		</table>
+		<div style="margin-bottom: 100px;font-family: Rajdhani, sans-serif;" align="center">
+			<button class="btn btn-secondary" th:onclick="redirectAllReviews()" 
+				style="margin-right: 20px;">All Reviews
+			</button>
+		</div>
+	</div>
+</div>
+
+
+
+</th:block>

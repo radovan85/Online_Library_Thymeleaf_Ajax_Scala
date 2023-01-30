@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container" style="margin-bottom: 100px;font-family: Rajdhani,sans-serif;margin-top: 125px;color: rgb(32,1,47);">
+		<div class="container" style="width:700px;">
+			<h2>Account Information</h2>
+			
+			<div style="margin-top: 50px;">
+				<table class="table table-bordered table-dark">
+					<tbody>
+						<tr>
+							<td th:text="${'Full name'}"></td>
+							<td th:text="${authUser.firstName + ' ' + authUser.lastName}"></td>
+						</tr>
+						
+						<tr>
+							<td th:text="${'Email'}"></td>
+							<td th:text="${authUser.email}">
+						</tr>
+						
+						<tr>
+							<td th:text="${'Address'}"></td>
+							<td th:text="${address.address}"></td>
+						<tr>
+						
+						<tr>
+							<td th:text="${'City'}"></td>
+							<td th:text="${address.city}"></td>
+						</tr>
+						
+						<tr>
+							<td th:text="${'State'}"></td>
+							<td th:text="${address.state}"></td>
+						</tr>
+						
+						<tr>
+							<td th:text="${'Zip Code'}"></td>
+							<td th:text="${address.zipcode}"></td>
+						</tr>
+						
+						<tr>
+							<td th:text="${'Country'}"></td>
+							<td th:text="${address.country}"></td>
+						</tr>
+						
+						<tr>
+							<td>Address Update</td>
+							<td>
+								<div align="right">
+									<button class="btn btn-primary" 
+									th:onclick="redirectUpdateAddress([[${address.deliveryAddressId}]])">Update
+									</button>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		
+		<div align="center" style="margin-top: 50px;">
+			<button class="btn btn-secondary" th:onclick="redirectHome()">Home Page</button>
+		</div>
+	</div>
+
+</th:block>

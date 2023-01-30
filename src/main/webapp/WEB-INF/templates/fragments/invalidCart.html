@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security5">
+
+<th:block th:fragment="ajaxLoadedContent">
+
+	<div class="container"
+		style="margin-top: 120px; font-family: Rajdhani, sans-serif; color: rgb(32, 1, 47);">
+
+		<div class="jumbotron" style="background-color: black; color: #d9d9d9;">
+			<h1 th:text="${'Invalid Cart'}"></h1>
+			<h5 th:text="${'Please add products in your cart'}"></h5>
+		</div>
+
+		<div align="center">
+			<button class="btn btn-warning border-dark"
+				style="background-color: #024c7d; color: #d9d9d9; margin-right: 15px;"
+				th:onclick="redirectAllBooks()"
+				th:onmouseout="this.style='background-color:#024c7d;color:#d9d9d9;margin-right: 15px;'"
+				th:onmouseover="this.style='background-color:#070707;color:rgb(217,5,18);margin-right: 15px;'">All
+				Books</button>
+		</div>
+	</div>
+</th:block>
